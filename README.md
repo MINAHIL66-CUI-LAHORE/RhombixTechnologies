@@ -3,7 +3,7 @@
 ## Author
 - Name: Minahil Aftab  
 - Domain: Machine Learning  
-- Organization: Rhombix  
+- Organization: Rhombix Technologies
 
 ---
 
@@ -87,6 +87,4 @@ A simple interactive web application has been developed using Streamlit to demon
 pip install streamlit
 Run the application:
 streamlit run app.py
-1. Install Streamlit:
-```bash
-pip install streamlit
+
