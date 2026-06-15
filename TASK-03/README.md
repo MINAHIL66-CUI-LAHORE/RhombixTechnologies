@@ -1,6 +1,6 @@
 # Essay Scorer AI
-# BY:MINAHIL AFTAB
-# RHOMBIX TECHNOLOGIES
+## BY:MINAHIL AFTAB
+## RHOMBIX TECHNOLOGIES
 An AI-powered web application that automatically scores essays using NLP and Machine Learning.
 
 ## Features
