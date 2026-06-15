@@ -2,7 +2,7 @@
 ## BY:MINAHIL AFTAB
 ## RHOMBIX TECHNOLOGIES
 An AI-powered web application that automatically scores essays using NLP and Machine Learning.
-
+![Essay Scorer Screenshot](assets/ESSAY-AI.png "Essay Scorer AI")
 ## Features
 - Instant essay scoring out of 10
 - Grade (A/B/C/D)
