@@ -7,3 +7,9 @@ joblib
 gunicorn
 matplotlib
 seaborn
+PyMuPDF
+python-docx
+textblob
+language-tool-python
+spacy
+tqdm
