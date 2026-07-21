@@ -30,7 +30,7 @@ The highest-performing model is automatically selected and saved for deployment.
 
 ---
 
-# 📷 Application Screenshots
+# Application Screenshots
 
 ## Home Page
 
@@ -118,7 +118,7 @@ https://drive.google.com/uc?export=download&id=1ALtLztvS1HqSXow1Es5dmXIc9HhcLbnf
 
 ---
 
-# ⚙️ Installation
+#  Installation
 
 Clone the repository
 
