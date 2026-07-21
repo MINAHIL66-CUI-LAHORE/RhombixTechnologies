@@ -75,11 +75,6 @@ fake_news_project/
 │   ├── confidence.png
 │   └── about_model.png
 │
-├── model/
-│   ├── model.pkl
-│   ├── vectorizer.pkl
-│   └── metadata.json
-│
 ├── preprocess.py
 ├── train_model.py
 ├── app.py
