@@ -1,0 +1,8 @@
+{
+  "best_model": "Random Forest",
+  "accuracies": {
+    "Logistic Regression": 0.9851860102472711,
+    "Random Forest": 0.9917576297616396,
+    "Naive Bayes": 0.9414123412786812
+  }
+}
