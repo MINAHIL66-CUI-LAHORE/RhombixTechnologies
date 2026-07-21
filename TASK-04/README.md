@@ -327,7 +327,7 @@ Predictions should be treated as probabilistic estimates rather than factual ver
 
 ---
 
-# 🚀 Future Improvements
+#  Future Improvements
 
 Possible future enhancements include
 
