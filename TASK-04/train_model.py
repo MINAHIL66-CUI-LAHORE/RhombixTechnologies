@@ -1,4 +1,4 @@
-﻿"""
+"""
 Fake News Detection System — training script.
 
 Dataset: clmentbisaillon/fake-and-real-news-dataset
@@ -31,6 +31,12 @@ BASE_DIR = Path(__file__).parent
 MODEL_DIR = BASE_DIR / "model"
 RANDOM_STATE = 42
 
+# Patterns that leak the label in this specific dataset. Almost all "real"
+# articles here are Reuters wire copy and start with a dateline like
+# "WASHINGTON (Reuters) -". If we don't strip these, the model learns
+# "has a wire-service dateline" instead of "is factually reliable", and
+# then flags any real article that isn't written in that exact style
+# (i.e. most real-world news) as fake.
 DATELINE_RE = re.compile(
     r"^\s*[A-Z][A-Za-z.,\s]{0,40}\((Reuters|AP|AFP)\)\s*-\s*", flags=re.MULTILINE
 )
@@ -61,6 +67,8 @@ def load_data() -> pd.DataFrame:
     df["content"] = df["content"].apply(strip_leakage)
     df["label"] = df["label"].str.upper().str.strip()
 
+    # Shuffle — the raw files are label-sorted (all real, then all fake),
+    # which otherwise biases the train/test split before stratify kicks in.
     df = df.sample(frac=1, random_state=RANDOM_STATE).reset_index(drop=True)
     df = df[df["content"].str.len() > 0].reset_index(drop=True)
     return df[["content", "label"]]
