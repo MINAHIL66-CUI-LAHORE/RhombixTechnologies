@@ -1,99 +1,251 @@
-# 📰 Fake News Detection System
+# Fake News Detection System
 
-A machine learning system that classifies news headlines/articles as **REAL** or **FAKE**,
-built with classic NLP (TF-IDF) + classical ML (Logistic Regression, Random Forest, Naive Bayes).
+A machine learning project that classifies news articles as **REAL** or **FAKE** using Natural Language Processing (NLP) and classical machine learning techniques. The system preprocesses news text, extracts TF-IDF features, compares multiple machine learning models, automatically selects the best-performing classifier, and provides real-time predictions through a Streamlit web application.
 
-## Results
+---
+
+## Model Performance
 
 | Model | Test Accuracy |
-|---|---|
-| **Logistic Regression** ⭐ (best) | **92.5%** |
+|-------|---------------|
+| **Logistic Regression (Best)** | **92.5%** |
 | Random Forest | 92.1% |
-| Naive Bayes | 88.7% |
+| Multinomial Naive Bayes | 88.7% |
 
-Trained and evaluated on ~4,600 labeled real-world news articles (balanced 50/50 REAL/FAKE),
-20% held out as a test set. Full details, charts, and confusion matrices are in the notebook.
+The model with the highest test accuracy is automatically saved and used by the application.
 
-## Project structure
+---
 
-```
+## Project Structure
+
+```text
 fake_news_project/
+│
 ├── data/
-│   └── news.csv                  # labeled dataset (title, text, label)
-├── model/                        # created after training
-│   ├── model.pkl                 # best trained classifier
-│   ├── vectorizer.pkl            # fitted TF-IDF vectorizer
-│   └── metadata.json             # which model won + all accuracies
-├── preprocess.py                 # shared text-cleaning function
-├── train_model.py                # data -> preprocess -> train -> evaluate -> save
-├── Fake_News_Detection.ipynb     # full walkthrough notebook (already executed)
-├── app.py                        # Streamlit interface — paste text, get a prediction
+│   ├── True.csv
+│   └── Fake.csv
+│
+├── model/
+│   ├── model.pkl
+│   ├── vectorizer.pkl
+│   └── metadata.json
+│
+├── preprocess.py
+├── train_model.py
+├── Fake_News_Detection.ipynb
+├── app.py
 ├── requirements.txt
 └── README.md
 ```
 
-## Setup
+---
+
+## Installation
+
+Install all required dependencies using:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-(First run will also auto-download a couple of small NLTK resources — punkt tokenizer
-and the English stopword list.)
+During the first execution, NLTK automatically downloads the required resources:
 
-## 1. Train the model
+- punkt
+- stopwords
 
-Either run the script:
+---
+
+## Training the Model
+
+Run the training script:
 
 ```bash
-python3 train_model.py
+python train_model.py
 ```
 
-...or open and run `Fake_News_Detection.ipynb` in Jupyter (it's already been executed once,
-so you can also just read through it — data exploration, cleaning, TF-IDF, all three models
-trained and compared, confusion matrices, and the save step). Both produce the same
-`model/model.pkl` and `model/vectorizer.pkl`.
+or execute the notebook:
 
-## 2. Launch the interface
+```
+Fake_News_Detection.ipynb
+```
+
+The training pipeline performs the following steps:
+
+- Loads `True.csv` and `Fake.csv`
+- Assigns REAL and FAKE labels
+- Combines article title and body
+- Removes publisher-specific label leakage
+- Cleans and preprocesses text
+- Creates TF-IDF features
+- Trains multiple machine learning models
+- Evaluates each model
+- Saves the best-performing model automatically
+
+The following files are generated after training:
+
+```text
+model/
+├── model.pkl
+├── vectorizer.pkl
+└── metadata.json
+```
+
+---
+
+## Running the Application
+
+Launch the Streamlit application:
 
 ```bash
 streamlit run app.py
 ```
 
-This opens a browser tab with a text box — paste in a headline or article and click **Check**
-to get an instant REAL/FAKE prediction with confidence bars.
+The application allows users to paste a news headline or article and instantly receive:
 
-## How it works
+- REAL or FAKE prediction
+- Prediction confidence scores
+- Best-performing model information
+- Accuracy of all trained models
 
-1. **Data**: `title + text` from each article is combined into one field.
-2. **Preprocessing** (`preprocess.py`): lowercase → strip URLs/HTML/punctuation → tokenize
-   (NLTK) → remove stop words. The app applies this *exact same* function to whatever a user
-   pastes in, so live input is cleaned identically to the training data.
-3. **Features**: TF-IDF over unigrams + bigrams, top 5,000 terms.
-4. **Models**: Logistic Regression, Random Forest, and Multinomial Naive Bayes are all trained
-   and compared; the most accurate one is saved automatically.
-5. **Interface**: `app.py` loads the saved model + vectorizer and serves predictions live.
+---
+
+## How It Works
+
+### 1. Data Loading
+
+The project loads two datasets:
+
+- `True.csv`
+- `Fake.csv`
+
+REAL and FAKE labels are assigned automatically before combining both datasets.
+
+---
+
+### 2. Source Leakage Removal
+
+Many genuine articles begin with publisher datelines such as:
+
+```
+WASHINGTON (Reuters) -
+```
+
+These patterns can unintentionally reveal the correct label to the model.
+
+To reduce dataset bias, the training pipeline removes:
+
+- Reuters datelines
+- AP datelines
+- AFP datelines
+- Mentions of "Reuters"
+
+This encourages the model to learn meaningful writing patterns instead of publisher identities.
+
+---
+
+### 3. Text Preprocessing
+
+The preprocessing pipeline performs:
+
+- Convert text to lowercase
+- Remove URLs
+- Remove HTML tags
+- Remove punctuation
+- Tokenize text using NLTK
+- Remove English stopwords
+
+The same preprocessing function is used during both training and prediction.
+
+---
+
+### 4. Feature Extraction
+
+The cleaned text is converted into numerical vectors using TF-IDF with:
+
+- Maximum Features: **5,000**
+- Unigrams and Bigrams
+- Minimum Document Frequency: **2**
+
+---
+
+### 5. Machine Learning Models
+
+Three classifiers are trained and compared:
+
+- Logistic Regression
+- Random Forest
+- Multinomial Naive Bayes
+
+The classifier with the highest accuracy is automatically selected and saved.
+
+---
 
 ## Dataset
 
-[`GeorgeMcIntire/fake_real_news_dataset`](https://github.com/GeorgeMcIntire/fake_real_news_dataset)
-— ~4,600 articles, REAL examples from mainstream outlets (e.g. Reuters), FAKE examples from
-known fake-news sites, originally compiled for the widely-used tutorial
-["How to Build a 'Fake News' Classification Model"](https://opendatascience.com/how-to-build-a-fake-news-classification-model/).
+This project uses the **Fake and Real News Dataset** by **clmentbisaillon**.
 
-## ⚠️ Limitations — please read
+The dataset contains two CSV files:
 
-This is a **student/portfolio-style demonstration**, not a production fact-checker:
+- `True.csv` — Genuine news articles
+- `Fake.csv` — Fake news articles
 
-- It learned *lexical and stylistic* patterns (word choice, phrasing) from ~4,600 articles
-  collected mostly around 2016–2017 — it has no access to real-world facts, and doesn't verify
-  claims against any source.
-- It can be **confidently wrong** on topics, publications, or writing styles that differ from
-  its training data (e.g. it misclassifies some genuine, dry Reuters-style economic headlines
-  as FAKE simply because that topic/style is underrepresented in training).
-- Treat predictions as a rough signal at best — always verify important claims against trusted,
-  primary sources.
+Each article includes:
 
-**Ideas to make it more robust:** a larger and more recent/diverse training set, source and
-metadata features (publisher, author, date), word embeddings or a transformer model (e.g.
-DistilBERT), and ongoing recalibration as misinformation tactics evolve.
+- Title
+- Text
+- Subject
+- Date
+
+The combined dataset is shuffled before splitting into training and testing sets to prevent label-order bias.
+
+---
+
+## Technologies Used
+
+- Python
+- Pandas
+- Scikit-learn
+- NLTK
+- Joblib
+- Streamlit
+- JSON
+- Jupyter Notebook
+
+---
+
+## Limitations
+
+This project is designed for educational and portfolio purposes.
+
+Although publisher-specific patterns are removed to reduce dataset bias, the model does **not** verify factual claims using external sources. Instead, it learns statistical language patterns from historical news articles.
+
+Performance may decrease on:
+
+- Recent news events
+- New writing styles
+- Unseen publishers
+- Emerging topics
+- Articles outside the training distribution
+
+Predictions should be considered as probabilistic estimates rather than factual verification.
+
+---
+
+## Future Improvements
+
+Possible enhancements include:
+
+- Larger and more diverse datasets
+- Transformer-based models (BERT, DistilBERT, RoBERTa)
+- Explainable AI (LIME, SHAP)
+- Publisher credibility features
+- Author metadata
+- Real-time fact-checking APIs
+- Continuous model retraining
+- News source reliability analysis
+
+---
+
+## Submitted By
+
+**Minahil Aftab**
