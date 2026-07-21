@@ -50,31 +50,49 @@ def strip_leakage(text: str) -> str:
     return text
 
 
-DATA_DIR = BASE_DIR / "data"
+# ==============================
+# Google Drive CSV URLs
+# ==============================
+TRUE_CSV_URL = "https://drive.google.com/uc?export=download&id=1rZxZPAuoQ7ukDeA5ulaFWgdGVpedRyTF"
+FAKE_CSV_URL = "https://drive.google.com/uc?export=download&id=1ALtLztvS1HqSXow1Es5dmXIc9HhcLbnf"
 
 
 def load_data() -> pd.DataFrame:
-    """Load True.csv/Fake.csv from the local data/ folder, combine, label, de-leak."""
-    true_df = pd.read_csv(DATA_DIR / "True.csv")
-    fake_df = pd.read_csv(DATA_DIR / "Fake.csv")
+    """Load True.csv/Fake.csv from Google Drive, combine, label, and preprocess."""
+
+    print("Downloading datasets from Google Drive...")
+
+    true_df = pd.read_csv(TRUE_CSV_URL)
+    fake_df = pd.read_csv(FAKE_CSV_URL)
+
+    # Add labels
     true_df["label"] = "REAL"
     fake_df["label"] = "FAKE"
 
+    # Combine datasets
     df = pd.concat([true_df, fake_df], ignore_index=True)
+
+    # Handle missing values
     df["title"] = df["title"].fillna("")
     df["text"] = df["text"].fillna("")
+
+    # Merge title and article text
     df["content"] = (df["title"] + " " + df["text"]).str.strip()
+
+    # Remove Reuters/AP datelines
     df["content"] = df["content"].apply(strip_leakage)
+
+    # Normalize labels
     df["label"] = df["label"].str.upper().str.strip()
 
-    # Shuffle — the raw files are label-sorted (all real, then all fake),
-    # which otherwise biases the train/test split before stratify kicks in.
+    # Shuffle data
     df = df.sample(frac=1, random_state=RANDOM_STATE).reset_index(drop=True)
+
+    # Remove empty rows
     df = df[df["content"].str.len() > 0].reset_index(drop=True)
+
     return df[["content", "label"]]
 
-
-def main():
     MODEL_DIR.mkdir(exist_ok=True)
 
     print("=" * 60)
