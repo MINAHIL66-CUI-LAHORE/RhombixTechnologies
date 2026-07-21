@@ -1,18 +1,52 @@
 # Fake News Detection System
 
-A machine learning project that classifies news articles as **REAL** or **FAKE** using Natural Language Processing (NLP) and classical machine learning techniques. The system preprocesses news text, extracts TF-IDF features, compares multiple machine learning models, automatically selects the best-performing classifier, and provides real-time predictions through a Streamlit web application.
+A machine learning project that classifies news articles as **REAL** or **FAKE** using Natural Language Processing (NLP) and classical machine learning algorithms. The system preprocesses news text, extracts TF-IDF features, compares multiple machine learning models, automatically selects the best-performing classifier, and provides real-time predictions through a Streamlit web application.
 
 ---
 
 ## Model Performance
 
 | Model | Test Accuracy |
-|-------|---------------|
+| :--- | :---: |
 | **Logistic Regression (Best)** | **92.5%** |
 | Random Forest | 92.1% |
 | Multinomial Naive Bayes | 88.7% |
 
-The model with the highest test accuracy is automatically saved and used by the application.
+The highest-performing model is automatically selected and saved for deployment.
+
+---
+
+# Application Screenshots
+
+## Home Page
+
+<p align="center">
+  <img src="images/home.png" width="900">
+</p>
+
+---
+
+## Prediction Result
+
+<p align="center">
+  <img src="images/prediction.png" width="900">
+</p>
+
+---
+
+## Confidence Scores
+
+<p align="center">
+  <img src="images/confidence.png" width="900">
+</p>
+
+---
+
+## About Model
+
+<p align="center">
+  <img src="images/about_model.png" width="900">
+</p>
 
 ---
 
@@ -24,6 +58,12 @@ fake_news_project/
 ├── data/
 │   ├── True.csv
 │   └── Fake.csv
+│
+├── images/
+│   ├── home.png
+│   ├── prediction.png
+│   ├── confidence.png
+│   └── about_model.png
 │
 ├── model/
 │   ├── model.pkl
@@ -42,7 +82,7 @@ fake_news_project/
 
 ## Installation
 
-Install all required dependencies using:
+Install all required dependencies:
 
 ```bash
 pip install -r requirements.txt
@@ -69,19 +109,19 @@ or execute the notebook:
 Fake_News_Detection.ipynb
 ```
 
-The training pipeline performs the following steps:
+The training pipeline:
 
 - Loads `True.csv` and `Fake.csv`
 - Assigns REAL and FAKE labels
 - Combines article title and body
 - Removes publisher-specific label leakage
 - Cleans and preprocesses text
-- Creates TF-IDF features
+- Generates TF-IDF features
 - Trains multiple machine learning models
 - Evaluates each model
 - Saves the best-performing model automatically
 
-The following files are generated after training:
+Generated files:
 
 ```text
 model/
@@ -118,7 +158,7 @@ The project loads two datasets:
 - `True.csv`
 - `Fake.csv`
 
-REAL and FAKE labels are assigned automatically before combining both datasets.
+REAL and FAKE labels are assigned before combining both datasets.
 
 ---
 
@@ -130,7 +170,7 @@ Many genuine articles begin with publisher datelines such as:
 WASHINGTON (Reuters) -
 ```
 
-These patterns can unintentionally reveal the correct label to the model.
+These patterns unintentionally reveal the correct label.
 
 To reduce dataset bias, the training pipeline removes:
 
@@ -139,7 +179,7 @@ To reduce dataset bias, the training pipeline removes:
 - AFP datelines
 - Mentions of "Reuters"
 
-This encourages the model to learn meaningful writing patterns instead of publisher identities.
+This encourages the model to learn writing patterns rather than publisher identities.
 
 ---
 
@@ -189,14 +229,14 @@ The dataset contains two CSV files:
 - `True.csv` — Genuine news articles
 - `Fake.csv` — Fake news articles
 
-Each article includes:
+Each article contains:
 
 - Title
 - Text
 - Subject
 - Date
 
-The combined dataset is shuffled before splitting into training and testing sets to prevent label-order bias.
+The combined dataset is shuffled before splitting into training and testing sets to avoid label-order bias.
 
 ---
 
@@ -204,6 +244,7 @@ The combined dataset is shuffled before splitting into training and testing sets
 
 - Python
 - Pandas
+- NumPy
 - Scikit-learn
 - NLTK
 - Joblib
@@ -213,9 +254,19 @@ The combined dataset is shuffled before splitting into training and testing sets
 
 ---
 
+## Saved Artifacts
+
+| File | Description |
+|------|-------------|
+| `model.pkl` | Best-performing trained classifier |
+| `vectorizer.pkl` | Trained TF-IDF vectorizer |
+| `metadata.json` | Best model name and evaluation results |
+
+---
+
 ## Limitations
 
-This project is designed for educational and portfolio purposes.
+This project is intended for educational and portfolio purposes.
 
 Although publisher-specific patterns are removed to reduce dataset bias, the model does **not** verify factual claims using external sources. Instead, it learns statistical language patterns from historical news articles.
 
@@ -227,7 +278,7 @@ Performance may decrease on:
 - Emerging topics
 - Articles outside the training distribution
 
-Predictions should be considered as probabilistic estimates rather than factual verification.
+Predictions should be treated as probabilistic estimates rather than factual verification.
 
 ---
 
